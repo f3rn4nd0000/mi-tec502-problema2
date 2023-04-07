@@ -5,7 +5,7 @@ import time
 broker = 'localhost'
 port = 1883
 topic = "fila/posto"
-client_id = f'tamanho da fila: {random.randint(0, 1000)}'
+client_id = f'{random.randint(0, 1000)}' # Equivalente ao número do posto
 # username = 'emqx'
 # password = 'public'
 
@@ -23,10 +23,10 @@ def connect_mqtt():
     return client
 
 def publish(client):
-    msg_count = 0
+    gas_sation_number = 0
     while True:
         time.sleep(5)
-        msg = f"mensagens: {msg_count}"
+        msg = f"mensagem: {client_id}, Tamanho da fila do posto {client_id} = {gas_sation_number}"
         result = client.publish(topic, msg)
         # result: [0, 1]
         status = result[0]
@@ -34,7 +34,7 @@ def publish(client):
             print(f"Enviando `{msg}` ao tópico `{topic}`")
         else:
             print(f"Falha ao enviar mensagem ao tópico {topic}")
-        msg_count += 1
+        gas_sation_number += 1
 
 
 def run():
