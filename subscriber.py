@@ -4,15 +4,15 @@ import time
 
 broker = 'localhost'
 port = 1883
-topic = "python/mqtt"
+topic = "fila/posto"
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
-            print("Connected to MQTT Broker!")
+            print("Conectado ao broker MQTT!")
         else:
-            print("Failed to connect, return code %d\n", rc)
+            print("Erro na conexão, código %d\n", rc)
     # Set Connecting Client ID
     client = mqtt_client.Client(client_id)
     # client.username_pw_set(username, password)
@@ -20,10 +20,9 @@ def connect_mqtt():
     client.connect(broker, port)
     return client
     
-        
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
-        print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
+        print(f"`{msg.payload.decode()}` Recebida do tópico `{msg.topic}`")
 
     client.subscribe(topic)
     client.on_message = on_message
