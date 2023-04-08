@@ -6,8 +6,6 @@ broker = 'localhost'
 port = 1883
 topic = "fila/posto"
 client_id = f'{random.randint(0, 1000)}' # Equivalente ao número do posto
-# username = 'emqx'
-# password = 'public'
 
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
@@ -15,9 +13,8 @@ def connect_mqtt():
             print("Conectado ao Broker MQTT!")
         else:
             print("Falha ao conectar, código de erro: %d\n", rc)
-    # Set Connecting Client ID
+    # Configura o ID do publisher
     client = mqtt_client.Client(client_id)
-    # client.username_pw_set(username, password)
     client.on_connect = on_connect
     client.connect(broker, port)
     return client
@@ -35,7 +32,6 @@ def publish(client):
         else:
             print(f"Falha ao enviar mensagem ao tópico {topic}")
         gas_sation_number += 1
-
 
 def run():
     client = connect_mqtt()

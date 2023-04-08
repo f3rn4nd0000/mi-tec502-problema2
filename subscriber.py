@@ -6,6 +6,8 @@ broker = 'localhost'
 port = 1883
 topic = "fila/posto"
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
+# cache armazenando todas as filas de todos os postos
+gas_station_queues = []
 
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
@@ -13,9 +15,8 @@ def connect_mqtt():
             print("Conectado ao broker MQTT!")
         else:
             print("Erro na conexão, código %d\n", rc)
-    # Set Connecting Client ID
+    # Configura o ID do cliente(subscriber)
     client = mqtt_client.Client(client_id)
-    # client.username_pw_set(username, password)
     client.on_connect = on_connect
     client.connect(broker, port)
     return client
@@ -23,9 +24,22 @@ def connect_mqtt():
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         print(f"`{msg.payload.decode()}` Recebida do tópico `{msg.topic}`")
-
+        manage_subscriptions(msg=msg)
     client.subscribe(topic)
     client.on_message = on_message
+
+def manage_subscriptions(msg):
+    received_msg = str(msg.payload.decode())
+    gas_station_info = {}
+    gas_station_info['id_station'] = received_msg.split('=')[0].split('posto')[1]
+    gas_station_info['queue_size'] = received_msg.split('=')[0]
+
+    for station in gas_station_queues:
+        if gas_station_info['id_station'] in station['id_station']:
+            station['queue_size'] = gas_station_info['queue_size']
+        else:
+            gas_station_queues.append(gas_station_info)
+            
 
 def run():
     client = connect_mqtt()
