@@ -1,6 +1,9 @@
 from paho.mqtt import client as mqtt_client
 import random
 import time
+import json
+import threading
+import requests
 
 broker = 'localhost'
 port = 1883
@@ -8,8 +11,10 @@ topic = "fila/posto"
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 # cache armazenando todas as filas de todos os postos
 gas_station_queues = []
+MAX_THREADS_NUMBER = 15
 
-def connect_mqtt():
+
+def connect_mqtt() -> mqtt_client:
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
             print("Conectado ao broker MQTT!")
@@ -23,7 +28,11 @@ def connect_mqtt():
     
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
-        print(f"`{msg.payload.decode()}` Recebida do tópico `{msg.topic}`")
+        print(str(msg))
+        data = str(msg.payload.decode("utf-8"))
+        print(f"`{data}` recebida do topico `{msg.topic}`")
+        requests.post('http://localhost:5000', data = msg.payload)
+        # print(f"`{msg.payload.decode()}` Recebida do tópico `{msg.topic}`")
         manage_subscriptions(msg=msg)
     client.subscribe(topic)
     client.on_message = on_message
@@ -40,12 +49,10 @@ def manage_subscriptions(msg):
         else:
             gas_station_queues.append(gas_station_info)
             
-
 def run():
     client = connect_mqtt()
     subscribe(client)
     client.loop_forever()
-
 
 if __name__ == "__main__":
     run()
