@@ -6,6 +6,7 @@ import uuid
 import sys
 import requests
 from gas_station import GasStation
+import publisher
 
 REFUEL_TIME = 60
 DISCHARGE_TENDENCY = {
@@ -54,11 +55,17 @@ class Vehicle():
         gas_station_object = GasStation()
         gas_station_object.set_id(gas_station_id)
         gas_station_object.set_queue_size(gas_station_queue)
+        
+        print('gas_station_id')
+        print(gas_station_id)
 
         if gas_station_object.get_station_id() == gas_station_id:
             gas_station_object.increase_queue()
             while self.fuel_level < 100:
+                print('reabastecendo veiculo')
+                print(self.fuel_level)
                 self.increase_fuel_level()
+            time.sleep(REFUEL_TIME)
             gas_station_object.reduce_queue()
 
     def to_json(self):

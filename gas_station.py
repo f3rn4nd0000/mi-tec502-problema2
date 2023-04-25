@@ -1,12 +1,13 @@
 import json
 import uuid
-
+from vehicle import Vehicle
 
 class GasStation():
     
     def __init__(self) -> None:
         self.id = str(uuid.uuid1())
         self.queue_size = 0
+        self.vehicle_fueling = None
 
     def reduce_queue(self):
         self.queue_size -= 1
@@ -31,6 +32,9 @@ class GasStation():
     def get_station_id(self):
         return self.id
     
+    def vehicle_is_fueling(self):
+        self.vehicle_fueling = Vehicle()
+
     def to_json(self):
         return json.dumps({
             "gas_station_id": self.id,

@@ -3,6 +3,8 @@ import random
 import time
 from gas_station import GasStation
 
+
+
 broker = 'localhost'
 port = 1883
 topic = "fila/posto"
@@ -37,7 +39,7 @@ def publish(client):
             print(f"Enviando `{msg}` ao tópico `{topic}`")
         else:
             print(f"Falha ao enviar mensagem ao tópico {topic}")
-        gas_station.increase_queue()
+        # gas_station.increase_queue()
 
 def run():
     client = connect_mqtt()
