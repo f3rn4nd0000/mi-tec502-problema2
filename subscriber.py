@@ -31,22 +31,26 @@ def subscribe(client: mqtt_client):
         print(str(msg))
         data = str(msg.payload.decode("utf-8"))
         print(f"`{data}` recebida do topico `{msg.topic}`")
-        requests.post('http://localhost:5000', data = msg.payload)
+        requests.post('http://localhost:5000/data', data = msg.payload)
         # print(f"`{msg.payload.decode()}` Recebida do tópico `{msg.topic}`")
         manage_subscriptions(msg=msg)
     client.subscribe(topic)
     client.on_message = on_message
 
 def manage_subscriptions(msg):
-    received_msg = str(msg.payload.decode())
+    received_msg = json.loads(msg.payload.decode('utf-8'))
+    print('received_msg')
+    print(received_msg)
     gas_station_info = {}
-    gas_station_info['id_station'] = received_msg.split('=')[0].split('posto')[1]
-    gas_station_info['queue_size'] = received_msg.split('=')[0]
+    gas_station_info['gas_station_id'] = received_msg['gas_station_id']
+    gas_station_info['queue_size']     = received_msg['queue_size']
 
     for station in gas_station_queues:
-        if gas_station_info['id_station'] in station['id_station']:
+        if gas_station_info['gas_station_id'] in station['gas_station_id']:
+            print('A')
             station['queue_size'] = gas_station_info['queue_size']
         else:
+            print('B')
             gas_station_queues.append(gas_station_info)
             
 def run():

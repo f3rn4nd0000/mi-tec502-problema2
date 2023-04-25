@@ -75,13 +75,15 @@ def connect_mqtt():
     return client
 
 def publish(client):
-    gas_sation_number = 0
-    car = Vehicle()
     gas_station = GasStation()
     
     while True:
         time.sleep(5)
-        msg = f" Tamanho da fila do posto {client_id}: {gas_station.queue_size}"
+        # msg = f" Tamanho da fila do posto {client_id}: {gas_station.queue_size}"
+        msg = gas_station.to_json()
+        print('msg')
+        print(msg)
+        print(type(msg))
         result = client.publish(topic, msg)
         # result: [0, 1]
         status = result[0]
@@ -89,7 +91,7 @@ def publish(client):
             print(f"Enviando `{msg}` ao tópico `{topic}`")
         else:
             print(f"Falha ao enviar mensagem ao tópico {topic}")
-        gas_sation_number += 1
+        gas_station.increase_queue()
 
 def run():
     client = connect_mqtt()
