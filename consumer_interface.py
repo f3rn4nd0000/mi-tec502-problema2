@@ -19,11 +19,12 @@ def data() -> str:
 
         print('payload')
         print(payload)
+        print(payload['gas_station_id'])
 
         if len(gas_station_ids) == 0:
             gas_station_ids.append(payload['gas_station_id'])
             gas_station_queue_sizes.append(payload['queue_size'])
-
+            
         try:
             correct_station_id = gas_station_ids.index(payload['gas_station_id'])
             gas_station_queue_sizes[correct_station_id] = payload['queue_size']
@@ -52,7 +53,7 @@ def data() -> str:
 def index():
     if request.method == 'GET':
         # data = session['messages']
-        return jsonify(gas_stations)
+        return jsonify({"postos": gas_station_ids, "tamanho_filas": gas_station_queue_sizes})
 
 if __name__ == '__main__':
     app.run()
