@@ -5,7 +5,9 @@ import json
 import uuid
 import sys
 import requests
+from gas_station import GasStation
 
+REFUEL_TIME = 60
 DISCHARGE_TENDENCY = {
     "0": "lenta",
     "1": "media",
@@ -38,14 +40,26 @@ class Vehicle():
             print(45*'_')
             for i in range(0,len(lista_postos['postos'])):
                 print(f"|{lista_postos['postos'][i]}: {lista_postos['tamanho_filas'][i]}   |")
+                better_gas_station_id    = lista_postos['postos'][0]
+                better_gas_station_queue = lista_postos['tamanho_filas'][0]
+            self.refuel(better_gas_station_id, better_gas_station_queue)
             print(45*'-')
         elif self.fuel_level <= 0:
             print('Veiculo sem combustivel, por favor chame um guincho!')
             sys.exit()
 
+    def refuel(self, gas_station_id, gas_station_queue):
+        # better_station_id = gas
+        # better_station_id = GasStation.get_station_by_id(id = gas_station_id)
+        gas_station_object = GasStation()
+        gas_station_object.set_id(gas_station_id)
+        gas_station_object.set_queue_size(gas_station_queue)
 
-    def refuel(self):
-        self.increase_fuel_level()
+        if gas_station_object.get_station_id() == gas_station_id:
+            gas_station_object.increase_queue()
+            while self.fuel_level < 100:
+                self.increase_fuel_level()
+            gas_station_object.reduce_queue()
 
     def to_json(self):
         return json.dumps({

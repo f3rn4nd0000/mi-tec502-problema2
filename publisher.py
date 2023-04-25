@@ -1,66 +1,12 @@
 from paho.mqtt import client as mqtt_client
 import random
 import time
-import threading
-import json
-import uuid
+from gas_station import GasStation
 
 broker = 'localhost'
 port = 1883
 topic = "fila/posto"
 client_id = f'{random.randint(0, 1000)}' # Equivalente ao número do posto
-MAX_THREADS = 15
-
-threads = []
-result = []
-
-DISCHARGE_TENDENCY = {
-    "0": "rapida",
-    "1": "media",
-    "2": "lenta"
-}
-
-class Vehicle():
-
-    def __init__(self) -> None:
-        self.discharge_tendency = random.randint(0,3)
-        self.fuel_level = 100
-    
-    def reduce_fuel_level(self):
-        self.fuel_level -= 1*self.discharge_tendency
-
-    def increase_fuel_level(self):
-        self.fuel_level += 1*self.discharge_tendency
-
-    def move_around(self):
-        self.reduce_fuel_level()
-
-    def refuel(self):
-        self.increase_fuel_level()
-
-    def to_json(self):
-        return json.dumps({
-            "discharge_tendency": DISCHARGE_TENDENCY.get[self.discharge_tendency],
-            "fuel_level": self.move_around()
-        })
-
-class GasStation():
-    
-    def __init__(self) -> None:
-        self.id = str(uuid.uuid1())
-        self.queue_size = 0
-
-    def reduce_queue(self):
-        self.queue_size -= 1
-
-    def increase_queue(self):
-        self.queue_size += 1
-    
-    def to_json(self):
-        return json.dumps({
-            "gas_station_id": self.id,
-            "queue_size": self.queue_size
-        })
 
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
@@ -97,16 +43,6 @@ def run():
     client = connect_mqtt()
     client.loop_start()
     publish(client)
-
-def main():
-    for _ in range(MAX_THREADS):
-        thr = threading.Thread(target=run)
-        threads.append(thr)
-        thr.setDaemon(True)
-        thr.start()
-    
-    for thread in threads:
-        thread.join()
 
 if __name__ == '__main__':
     run()
