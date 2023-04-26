@@ -1,18 +1,20 @@
+from publisher import Publisher
+from subscriber import Subscriber
 import json
 import uuid
-from publisher import Publisher
 
 class GasStation():
     
     def __init__(self) -> None:
-        self.queue_size = 0
+        self.id              = uuid.uuid1()        
+        self.queue_size      = 0
         self.vehicle_fueling = None
-        self.publisher = Publisher()
-        self.id = Publisher().client_id
+        self.publisher       = Publisher("fila/posto")
+        self.subscriber      = Subscriber("carros/fila")
 
     def reduce_queue(self):
         self.queue_size -= 1
-
+    
     def increase_queue(self):
         self.queue_size += 1
     
@@ -35,7 +37,7 @@ class GasStation():
     
     def to_json(self):
         return json.dumps({
-            "gas_station_id": self.id,
+            "gas_station_id": str(self.id),
             "queue_size": self.queue_size
         })
     
@@ -43,7 +45,9 @@ class GasStation():
         client_publisher = self.publisher.connect_mqtt()
         client_publisher.loop_start()
         message = self.to_json()
+        # if self.queue_size != self.to_json()["queue_size"]:
         self.publisher.publish(client_publisher, message)
+            
 
 if __name__ == "__main__":
     new_gas_station = GasStation()

@@ -12,3 +12,5 @@ class Fog():
         self.publisher    = Publisher()
         self.gas_stations = []
         self.vehicles     = [] 
+
+    # def manage_gas_stations(self):

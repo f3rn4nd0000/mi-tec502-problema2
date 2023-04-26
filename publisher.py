@@ -3,12 +3,18 @@ import random
 import time
 # from gas_station import GasStation
 
+"""
+Exemplos de topico: 
+    "fila/posto" fila de cada posto de gasolina
+    "carros/fila" numero de carros se dirigindo ao posto para reabastecer
+"""
+
 class Publisher():
 
-    def __init__(self) -> None:
+    def __init__(self, topic) -> None:
        self.broker = "localhost"
        self.port = 1883
-       self.topic = "fila/posto"
+       self.topic = topic
        self.client_id = f'{random.randint(0, 1000)}' # Equivalente ao número do posto
 
     def connect_mqtt(self):
@@ -26,7 +32,7 @@ class Publisher():
     def publish(self, client, message):
         # new_gas_station = GasStation()
         while True:
-            time.sleep(5)
+            time.sleep(2)
             # msg = f" Tamanho da fila do posto {client_id}: {gas_station.queue_size}"
             print('message')
             print(message)

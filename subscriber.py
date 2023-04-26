@@ -1,13 +1,15 @@
 from paho.mqtt import client as mqtt_client
+from multiprocessing import Process
+from threading import Thread, Lock
 import random
 import requests
 
 class Subscriber():
    
-    def __init__(self) -> None:
+    def __init__(self, topic) -> None:
         self.broker    = 'localhost'
         self.port      = 1883
-        self.topic     = "fila/posto"
+        self.topic     = topic
         self.client_id = f'python-mqtt-{random.randint(0, 1000)}'
         self.gas_station_queues = [] # cache armazenando todas as filas de todos os postos
 
@@ -25,15 +27,15 @@ class Subscriber():
         
     def subscribe(self, client: mqtt_client):
         def on_message(client, userdata, msg):
-            print(str(msg))
+            # print(str(msg))
             data = str(msg.payload.decode("utf-8"))
             print(f"`{data}` recebida do topico `{msg.topic}`")
-            requests.post('http://localhost:5000/data', data = msg.payload)
+            return data
             # print(f"`{msg.payload.decode()}` Recebida do tópico `{msg.topic}`")
             # self.manage_subscriptions(msg=msg)
         client.subscribe(self.topic)
         client.on_message = on_message
-
+        
     # def manage_subscriptions(self, msg):
     #     received_msg = json.loads(msg.payload.decode('utf-8'))
     #     print('received_msg')
@@ -58,7 +60,36 @@ class Subscriber():
         client_subscriber = self.connect_mqtt()
         self.subscribe(client_subscriber)
         client_subscriber.loop_forever()
+            
 
 if __name__ == "__main__":
-    new_subscriber = Subscriber()
-    new_subscriber.run()
+    thread_gas_station = Thread(target = Subscriber("fila/posto").run).start()
+    thread_vehicle     = Thread(target = Subscriber("carros/fila").run).start()
+
+    # thread_gas_station.start()
+    # thread_vehicle.start()
+    
+    # thread_gas_station.join()
+    # thread_vehicle.join()
+
+    # while True:
+    #     thread_gas_station.run()
+    #     thread_vehicle.run()
+
+    #     thread_gas_station.join()
+    #     thread_vehicle.join()
+    
+
+    # vehicle_subscriber     = Subscriber("carros/fila").run()
+    # gas_station_subscriber = Subscriber("fila/posto").run()
+
+    # thread_vehicle.start()
+    # thread_gas_station.start()
+
+    # thread_vehicle.join()
+    # thread_gas_station.join()
+
+    #     thread_vehicle.join()
+    #     thread_gas_station.join()
+
+
