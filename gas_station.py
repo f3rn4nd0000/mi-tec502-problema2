@@ -1,6 +1,5 @@
 import json
 import uuid
-from vehicle import Vehicle
 
 class GasStation():
     
@@ -32,9 +31,6 @@ class GasStation():
     def get_station_id(self):
         return self.id
     
-    def vehicle_is_fueling(self):
-        self.vehicle_fueling = Vehicle()
-
     def to_json(self):
         return json.dumps({
             "gas_station_id": self.id,
