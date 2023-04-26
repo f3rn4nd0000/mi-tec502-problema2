@@ -6,7 +6,7 @@ import uuid
 import sys
 import requests
 from gas_station import GasStation
-import publisher
+from publisher import Publisher
 
 REFUEL_TIME = 60
 DISCHARGE_TENDENCY = {
@@ -61,6 +61,7 @@ class Vehicle():
 
         if gas_station_object.get_station_id() == gas_station_id:
             gas_station_object.increase_queue()
+
             while self.fuel_level < 100:
                 print('reabastecendo veiculo')
                 print(self.fuel_level)
@@ -70,6 +71,7 @@ class Vehicle():
 
     def to_json(self):
         return json.dumps({
+            "vehicle_id": self.vehicle_id,
             "discharge_tendency": DISCHARGE_TENDENCY.get[self.discharge_tendency],
             "fuel_level": self.move_around()
         })

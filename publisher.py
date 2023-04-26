@@ -6,7 +6,7 @@ import time
 class Publisher():
 
     def __init__(self) -> None:
-       self.broker = 'localhost'
+       self.broker = "localhost"
        self.port = 1883
        self.topic = "fila/posto"
        self.client_id = f'{random.randint(0, 1000)}' # Equivalente ao número do posto
