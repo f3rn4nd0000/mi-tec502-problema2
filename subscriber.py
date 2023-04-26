@@ -1,8 +1,6 @@
 from paho.mqtt import client as mqtt_client
 import random
-import time
 import json
-import threading
 import requests
 
 broker    = 'localhost'
@@ -11,7 +9,6 @@ topic     = "fila/posto"
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 # cache armazenando todas as filas de todos os postos
 gas_station_queues = []
-MAX_THREADS_NUMBER = 15
 
 def connect_mqtt() -> mqtt_client:
     def on_connect(client, userdata, flags, rc):

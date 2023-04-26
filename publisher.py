@@ -1,8 +1,7 @@
 from paho.mqtt import client as mqtt_client
 import random
 import time
-from gas_station import GasStation
-
+# from gas_station import GasStation
 
 class Publisher():
 
@@ -24,30 +23,28 @@ class Publisher():
         client.connect(self.broker, self.port)
         return client
 
-    def publish(self, client):
-        new_gas_station = GasStation()
-        
+    def publish(self, client, message):
+        # new_gas_station = GasStation()
         while True:
             time.sleep(5)
             # msg = f" Tamanho da fila do posto {client_id}: {gas_station.queue_size}"
-            msg = new_gas_station.to_json()
-            print('msg')
-            print(msg)
-            print(type(msg))
-            result = client.publish(self.topic, msg)
+            print('message')
+            print(message)
+            print(type(message))
+            result = client.publish(self.topic, message)
             # result: [0, 1]
             status = result[0]
             if status == 0:
-                print(f"Enviando `{msg}` ao tópico `{self.topic}`")
+                print(f"Enviando `{message}` ao tópico `{self.topic}`")
             else:
                 print(f"Falha ao enviar mensagem ao tópico {self.topic}")
             # gas_station.increase_queue()
 
-    def run(self):
+    def run(self, message):
         client = self.connect_mqtt()
         client.loop_start()
-        self.publish(client)
+        self.publish(client, message)
 
-if __name__ == '__main__':
-    publisher = Publisher()
-    publisher.run()
+# if __name__ == '__main__':
+#     publisher = Publisher()
+#     publisher.run()
