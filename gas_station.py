@@ -2,6 +2,7 @@ from publisher import Publisher
 from subscriber import Subscriber
 import json
 import uuid
+from threading import Thread
 
 class GasStation():
     
@@ -47,9 +48,14 @@ class GasStation():
         message = self.to_json()
         # if self.queue_size != self.to_json()["queue_size"]:
         self.publisher.publish(client_publisher, message)
-            
+        self.subscriber = Subscriber("carros/fila")
+
+        
 
 if __name__ == "__main__":
     new_gas_station = GasStation()
     new_gas_station.main()
+    
+    # gas_station_thread = Thread(target = new_gas_station.main).start()
+    # queue_size_thread = Thread(target = new_gas_station.subscriber.run).start()
     
