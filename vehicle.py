@@ -6,6 +6,7 @@ import sys
 import requests
 from gas_station import GasStation
 from publisher import Publisher
+from threading import Thread
 
 REFUEL_TIME = 60
 DISCHARGE_TENDENCY = {
@@ -43,20 +44,14 @@ class Vehicle():
             print('Atenção, nivel de combustivel muito baixo, por favor se dirija a um posto')
             lista_postos = json.loads(requests.get('http://127.0.0.1:5000/').content.decode('utf-8'))
             
-            # print('lista_postos')
-            # print(lista_postos)
-            print('Veja abaixo uma lista de 5 postos com a menor fila:\n')
-            print(45*'_')
-            
-            for i in range(0,len(lista_postos['postos'])):
-                print(f"|{lista_postos['postos'][i]}: {lista_postos['tamanho_filas'][i]}   |")
-            
-            better_gas_station_id    = lista_postos['postos'][0]
-            better_gas_station_queue = lista_postos['tamanho_filas'][0]
-            self.refuel(better_gas_station_id, better_gas_station_queue)
-            
-            print(45*'-')
-        
+            print('lista_postos')
+            print(lista_postos)
+
+            self.moving_to_station = True
+            self.station_id.join(str(lista_postos['postos'][0]))
+
+            self.go_to_station()
+
         elif self.fuel_level <= 0:
             print('Veiculo sem combustivel, por favor chame um guincho!')
             sys.exit()
@@ -93,6 +88,7 @@ class Vehicle():
 if __name__ == '__main__':
     new_car = Vehicle()
     while True:
-        new_car.go_to_station()
-        # time.sleep(.1)
+        thread_move_around = Thread(target = new_car.move_around).run()
+    # thread_go_to_station = Thread(target = new_car.go_to_station).run()    
+        # new_car.go_to_station()
         # new_car.move_around()

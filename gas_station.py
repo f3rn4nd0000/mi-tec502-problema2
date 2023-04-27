@@ -47,7 +47,11 @@ class GasStation():
         message = self.to_json()
         # if self.queue_size != self.to_json()["queue_size"]:
         self.publisher.publish(client_publisher, message)
-            
+        # self.subscriber = Subscriber("carros/fila")
+        # message_mqtt = self.subscriber.subscribe(client = client_publisher)
+        # print('message da gas station')
+        # print(message_mqtt)
+
 
 if __name__ == "__main__":
     new_gas_station = GasStation()
