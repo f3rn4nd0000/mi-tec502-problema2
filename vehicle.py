@@ -48,7 +48,7 @@ class Vehicle():
             print(lista_postos)
 
             self.moving_to_station = True
-            self.station_id.join(str(lista_postos['postos'][0]))
+            # self.station_id.join(str(lista_postos['postos'][0]))
 
             self.go_to_station()
 
@@ -62,7 +62,7 @@ class Vehicle():
         gas_station_object = GasStation().get_station_by_id(gas_station_id)
         # gas_station_object.set_id(gas_station_id)
         # gas_station_object.set_queue_size(gas_station_queue)
-
+        self.publisher.publish(f"veiculo se dirigindo ao posto de id: {gas_station_id}")
         """ EH GERADO UM OBJETO None """  
         print('gas_station_id')
         print(gas_station_object)

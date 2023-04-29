@@ -45,8 +45,9 @@ class GasStation():
         client_publisher = self.publisher.connect_mqtt()
         client_publisher.loop_start()
         message = self.to_json()
-        # if self.queue_size != self.to_json()["queue_size"]:
         self.publisher.publish(client_publisher, message)
+        
+        # if self.queue_size != self.to_json()["queue_size"]:
         # self.subscriber = Subscriber("carros/fila")
         # message_mqtt = self.subscriber.subscribe(client = client_publisher)
         # print('message da gas station')
@@ -57,3 +58,4 @@ if __name__ == "__main__":
     new_gas_station = GasStation()
     new_gas_station.main()
     
+    new_gas_station.subscriber.subscribe()

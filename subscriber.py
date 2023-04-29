@@ -31,7 +31,6 @@ class Subscriber():
             data = str(msg.payload.decode("utf-8"))
             print(f"`{data}` recebida do topico `{msg.topic}`")
             return data
-            # requests.post('http://localhost:5000/data', data = msg.payload)
             # fornece os dados a interface de consumidor
             # print(f"`{msg.payload.decode()}` Recebida do tópico `{msg.topic}`")
             # self.manage_subscriptions(msg=msg)
@@ -42,7 +41,6 @@ class Subscriber():
         client_subscriber = self.connect_mqtt()
         self.subscribe(client_subscriber)
         client_subscriber.loop_forever()
-            
 
 if __name__ == "__main__":
       sub = Subscriber('fila/posto')
